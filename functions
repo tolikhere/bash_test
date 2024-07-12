@@ -1,0 +1,159 @@
+#!/usr/bin/env sh
+
+my_ls() { # declaring
+    echo 'Listing files'
+    ls
+    echo 'Done!'
+}
+
+my_ls # calling
+
+GLOBAL_VAR='global'
+
+my_function() {
+    local variable=1
+    OTHER_VARIABLE=2
+
+    echo "GLOBAL_VAR in function $GLOBAL_VAR"
+}
+
+my_function
+
+echo "GLOBAL_VAR is $GLOBAL_VAR"
+echo "OTHER_VARIABLE is $OTHER_VARIABLE"
+echo "variable is: $variable"
+echo "missing is: $missing"
+
+# Locals without a value:
+
+second_function() {
+    local first
+    local second
+
+    echo "$first and $second"
+}
+
+second_function
+
+# Locals without a value on init:
+
+third_function() {
+    local first
+    local second
+
+    first='first text'
+    second='second value'
+
+    echo "$first and $second"
+}
+
+third_function
+
+sum_two_numbers() {
+    local first
+    local second
+
+    first="$1"
+    second="$2"
+
+    echo "$((first + second))"
+}
+
+sum_two_numbers 2 3
+
+# Default values:
+
+greet() {
+    local user
+    user="${1:-root}"
+
+    echo "Hello, $user"
+}
+
+greet tolik
+
+greet
+
+# All arguments
+
+echo_all_words() {
+    echo "Words: $*"
+}
+
+echo_all_words 'cat' 'dog' 'piggy'
+
+# Named arguments:
+
+with_named() {
+    local h
+    local p
+    local d
+
+    OPTIND=1
+
+    while getopts 'hd:p:' opt; do
+      case "$opt" in
+        h) h=$OPTARG;;
+        p) p=$OPTARG;;
+        d) d=$OPTARG;;
+
+        *) (echo 'invalid arg'; exit 1);;
+      esac
+    done
+
+    shift $((OPTIND-1))
+    [ "$1" = '--' ] && shift
+
+    echo "
+    ARGS:
+    - h: $h
+    - p: $p
+    - d: $d
+    "
+}
+
+with_named -p 'text'
+with_named -h -d 1 -p 'text'
+with_named -e 1
+
+# Return
+
+can_fail() {
+    if [ "$1" -eq 5 ]; then
+      echo 'error'
+      return 1
+    fi
+
+    echo 'correct'
+    return 0
+}
+
+can_fail 1
+
+echo "status code is: $?"
+
+can_fail 5
+echo "status code is: $?"
+
+# Subshell
+
+can_fail() {
+    if [ "$1" -eq 5 ]; then
+      echo 'error'
+      return 1
+    else
+      echo 'correct'
+      return 0
+    fi
+}
+
+first=$(can_fail 1)
+echo "returns: $first code: $?"
+
+second=$(can_fail 5)
+echo "returns: $second code: $?"
+
+readonly X=1
+echo "this is $X"
+
+X=2

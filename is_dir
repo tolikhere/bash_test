@@ -1,0 +1,5 @@
+#!/usr/bin/env sh
+
+if [ -d 'functions' ]; then
+  echo 'Directory functions/ exists'
+fi

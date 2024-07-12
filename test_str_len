@@ -1,0 +1,6 @@
+#!/usr/bin/env sh
+
+MY_STRING=''
+if [ -z "$MY_STRING" ]; then
+  echo 'Variable $MISSING is missing!'
+fi

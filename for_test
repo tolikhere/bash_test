@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+MY_ARRAY=(1 2 3)
+
+echo "Array size: ${#MY_ARRAY[*]}"
+
+for item in ${MY_ARRAY[*]}; do
+  echo "item: $item"
+done
